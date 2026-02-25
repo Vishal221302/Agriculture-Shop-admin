@@ -6,6 +6,8 @@ import BannerPage from './pages/Banner';
 import CategoriesPage from './pages/Categories';
 import ProductsPage from './pages/Products';
 import OrdersPage from './pages/Orders';
+import { API_URL } from './config';
+
 
 // ============================
 // Auth Context
@@ -234,7 +236,7 @@ function DashboardPage() {
 
     const fetchStats = () => {
         setLoading(true);
-        fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
+        fetch(`${API_URL}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } })
             .then(r => r.json())
             .then(d => { if (d.success) setData(d.data); })
             .catch(() => { })
@@ -243,7 +245,7 @@ function DashboardPage() {
 
     useEffect(() => { fetchStats(); }, [token]);
 
-    const fmtRupee = v => v >= 1000 ? `₹${(v / 1000).toFixed(1)}K` : `₹${v}`;
+    const fmtRupee = v => v >= 1000 ? `₹${(v / 1000).toFixed(1)}K` : `₹${v} `;
 
     return (
         <AdminLayout pageTitle="Dashboard | डैशबोर्ड">
@@ -314,7 +316,7 @@ function DashboardPage() {
                                             <div style={{ height: 7, borderRadius: 99, background: '#f0fdf4', marginTop: 4, overflow: 'hidden' }}>
                                                 <div style={{
                                                     height: '100%', borderRadius: 99,
-                                                    width: `${(Number(p.total_qty) / maxQ) * 100}%`,
+                                                    width: `${(Number(p.total_qty) / maxQ) * 100}% `,
                                                     background: 'var(--green-600)',
                                                     transition: 'width 0.6s ease',
                                                 }} />
@@ -335,7 +337,7 @@ function DashboardPage() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 8 }}>
                             {[
                                 ['🔑', 'Admin Login', 'admin / admin123'],
-                                ['🌐', 'Backend API', 'localhost:5000'],
+                                ['🌐', 'Backend API', API_URL.replace('https://', '')],
                                 ['🛒', 'Customer Site', 'localhost:5173'],
                                 ['📁', 'Uploads', 'backend/uploads/'],
                             ].map(([icon, label, val]) => (

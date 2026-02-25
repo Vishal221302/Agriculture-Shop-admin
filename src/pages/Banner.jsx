@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AdminLayout, useAuth } from '../App';
+import { API_URL } from '../config';
 
-const API = 'http://localhost:5000';
+
+const API = API_URL;
 const UNITS = ['ml', 'L', 'KG', 'g'];
 
 const BLANK = {
@@ -120,7 +122,7 @@ export default function BannerPage() {
 
     const fetchBanners = () => {
         setLoading(true);
-        fetch('/api/admin/banners', { headers: authH })
+        fetch(`${API_URL}/api/admin/banners`, { headers: authH })
             .then(r => r.json())
             .then(d => setBanners(d.data || []))
             .catch(() => showAlert('error', 'Failed to load banners'))
@@ -158,7 +160,7 @@ export default function BannerPage() {
             Object.entries(form).forEach(([k, v]) => fd.append(k, v));
             if (mediaFile) fd.append(form.banner_type === 'video' ? 'banner_video' : 'banner_image', mediaFile);
 
-            const url = editId ? `/api/admin/banners/${editId}` : '/api/admin/banners';
+            const url = editId ? `${API_URL}/api/admin/banners/${editId}` : `${API_URL}/api/admin/banners`;
             const method = editId ? 'PUT' : 'POST';
             const res = await fetch(url, { method, headers: authH, body: fd });
             const data = await res.json();
@@ -176,7 +178,7 @@ export default function BannerPage() {
     const handleActivate = async (id, makeActive) => {
         setSaving(true);
         try {
-            const res = await fetch(`/api/admin/banners/${id}/activate`, {
+            const res = await fetch(`${API_URL}/api/admin/banners/${id}/activate`, {
                 method: 'PUT',
                 headers: { ...authH, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ is_active: makeActive ? 1 : 0 }),
@@ -196,7 +198,7 @@ export default function BannerPage() {
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this banner?')) return;
         try {
-            const res = await fetch(`/api/admin/banners/${id}`, { method: 'DELETE', headers: authH });
+            const res = await fetch(`${API_URL}/api/admin/banners/${id}`, { method: 'DELETE', headers: authH });
             const data = await res.json();
             if (data.success) {
                 setBanners(prev => prev.filter(b => b.id !== id));

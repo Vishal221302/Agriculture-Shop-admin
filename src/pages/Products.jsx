@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AdminLayout, useAuth } from '../App';
+import { API_URL } from '../config';
+
 
 export default function ProductsPage() {
     const { token } = useAuth();
@@ -30,8 +32,8 @@ export default function ProductsPage() {
     const fetchAll = () => {
         setLoading(true);
         Promise.all([
-            fetch('/api/admin/products', { headers: authH }).then(r => r.json()),
-            fetch('/api/admin/categories', { headers: authH }).then(r => r.json()),
+            fetch(`${API_URL}/api/admin/products`, { headers: authH }).then(r => r.json()),
+            fetch(`${API_URL}/api/admin/categories`, { headers: authH }).then(r => r.json()),
         ]).then(([p, c]) => {
             setProducts(p.data || []);
             setCategories(c.data || []);
@@ -68,7 +70,7 @@ export default function ProductsPage() {
             is_active: String(p.is_active)
         });
         setEditId(p.id); setProductImg(null); setCertImgs(null); setVideoFile(null);
-        setImgPreview(p.product_image ? `/uploads/${p.product_image}` : null);
+        setImgPreview(p.product_image ? `${API_URL}/uploads/${p.product_image}` : null);
         setShowForm(true);
     };
     const closeForm = () => { setShowForm(false); setEditId(null); setProductImg(null); setCertImgs(null); setVideoFile(null); setImgPreview(null); };
@@ -82,7 +84,7 @@ export default function ProductsPage() {
         if (productImg) fd.append('product_image', productImg);
         if (certImgs) Array.from(certImgs).forEach(f => fd.append('certification_images', f));
         if (videoFile && form.video_type === 'upload') fd.append('video_file', videoFile);
-        const url = editId ? `/api/admin/products/${editId}` : '/api/admin/products';
+        const url = editId ? `${API_URL}/api/admin/products/${editId}` : `${API_URL}/api/admin/products`;
         const method = editId ? 'PUT' : 'POST';
         try {
             const res = await fetch(url, { method, headers: authH, body: fd });
@@ -95,7 +97,7 @@ export default function ProductsPage() {
     const handleDelete = async (id) => {
         if (!deleteId) { setDeleteId(id); return; }
         try {
-            const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE', headers: authH });
+            const res = await fetch(`${API_URL}/api/admin/products/${id}`, { method: 'DELETE', headers: authH });
             const data = await res.json();
             if (data.success) { showAlert('success', 'Product deleted'); fetchAll(); }
             else showAlert('error', data.message);
@@ -315,7 +317,7 @@ export default function ProductsPage() {
                                         <tr key={p.id} style={{ verticalAlign: 'middle' }}>
                                             <td style={{ padding: '6px 8px' }}>
                                                 {p.product_image ? (
-                                                    <img src={`/uploads/${p.product_image}`} alt={p.medicine_name_en}
+                                                    <img src={`${API_URL}/uploads/${p.product_image}`} alt={p.medicine_name_en}
                                                         style={{ width: 36, height: 36, borderRadius: 6, objectFit: 'cover' }} />
                                                 ) : <span style={{ opacity: 0.4, fontSize: '0.75rem' }}>No img</span>}
                                             </td>

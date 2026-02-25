@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../App';
 import { useAuth } from '../App';
+import { API_URL } from '../config';
 
-const API = 'http://localhost:5000';
+
+const API = API_URL;
 const STATUS_OPTIONS = ['pending', 'confirmed', 'delivered', 'cancelled'];
 
 function OrderCard({ order, onStatusChange, onDelete }) {
@@ -175,7 +177,7 @@ export default function OrdersPage() {
 
     const fetchOrders = () => {
         setLoading(true);
-        fetch('/api/admin/orders', { headers: authHeader })
+        fetch(`${API_URL}/api/admin/orders`, { headers: authHeader })
             .then(r => r.json())
             .then(data => setOrders(data.data || []))
             .catch(() => showAlert('error', 'Failed to load orders'))
@@ -191,7 +193,7 @@ export default function OrdersPage() {
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
-            const res = await fetch(`/api/admin/orders/${orderId}/status`, {
+            const res = await fetch(`${API_URL}/api/admin/orders/${orderId}/status`, {
                 method: 'PUT',
                 headers: { ...authHeader, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ order_status: newStatus })
@@ -209,7 +211,7 @@ export default function OrdersPage() {
     const handleDelete = async (orderId) => {
         if (!window.confirm(`Delete order #${orderId}? This cannot be undone.`)) return;
         try {
-            const res = await fetch(`/api/admin/orders/${orderId}`, {
+            const res = await fetch(`${API_URL}/api/admin/orders/${orderId}`, {
                 method: 'DELETE', headers: authHeader
             });
             const data = await res.json();

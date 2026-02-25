@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
+import { API_URL } from '../config';
+
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -21,7 +23,7 @@ export default function LoginPage() {
         setLoading(true);
         setError('');
         try {
-            const res = await fetch('/api/admin/login', {
+            const res = await fetch(`${API_URL}/api/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })

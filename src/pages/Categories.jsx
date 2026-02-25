@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AdminLayout, useAuth } from '../App';
+import { API_URL } from '../config';
+
 
 export default function CategoriesPage() {
     const { token } = useAuth();
@@ -19,7 +21,7 @@ export default function CategoriesPage() {
 
     const fetchCategories = () => {
         setLoading(true);
-        fetch('/api/admin/categories', { headers: authH })
+        fetch(`${API_URL}/api/admin/categories`, { headers: authH })
             .then(r => r.json()).then(d => setCategories(d.data || []))
             .catch(() => showAlert('error', 'Failed to fetch categories'))
             .finally(() => setLoading(false));
@@ -45,7 +47,7 @@ export default function CategoriesPage() {
         setForm({ name_hi: cat.name_hi, name_en: cat.name_en, icon: cat.icon || '🌾' });
         setEditId(cat.id);
         setImageFile(null);
-        setImagePreview(cat.category_image ? `/uploads/${cat.category_image}` : null);
+        setImagePreview(cat.category_image ? `${API_URL} / uploads / ${cat.category_image}` : null);
         setShowForm(true);
     };
     const closeForm = () => { setShowForm(false); setEditId(null); setImageFile(null); setImagePreview(null); };
@@ -58,7 +60,7 @@ export default function CategoriesPage() {
         fd.append('icon', form.icon);
         if (imageFile) fd.append('category_image', imageFile);
 
-        const url = editId ? `/api/admin/categories/${editId}` : '/api/admin/categories';
+        const url = editId ? `${API_URL}/api/admin/categories/${editId}` : `${API_URL}/api/admin/categories`;
         const method = editId ? 'PUT' : 'POST';
         try {
             const res = await fetch(url, { method, headers: authH, body: fd });
@@ -71,7 +73,7 @@ export default function CategoriesPage() {
     const handleDelete = async (id) => {
         if (!deleteId) { setDeleteId(id); return; }
         try {
-            const res = await fetch(`/api/admin/categories/${id}`, { method: 'DELETE', headers: authH });
+            const res = await fetch(`${API_URL} / api / admin / categories / ${id}`, { method: 'DELETE', headers: authH });
             const data = await res.json();
             if (data.success) { showAlert('success', 'Category deleted'); fetchCategories(); }
             else showAlert('error', data.message);
@@ -81,7 +83,7 @@ export default function CategoriesPage() {
 
     return (
         <AdminLayout pageTitle="🗂️ Categories | श्रेणियां">
-            {alert && <div className={`alert alert-${alert.type}`}>{alert.type === 'success' ? '✅' : '⚠️'} {alert.msg}</div>}
+            {alert && <div className={`alert alert - ${alert.type}`}>{alert.type === 'success' ? '✅' : '⚠️'} {alert.msg}</div>}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
                 <button className="btn btn-primary" onClick={openAdd}>➕ Add Category</button>
@@ -136,7 +138,7 @@ export default function CategoriesPage() {
                                         <tr key={cat.id} style={{ verticalAlign: 'middle' }}>
                                             <td style={{ padding: '5px 8px' }}>
                                                 {cat.category_image ? (
-                                                    <img src={`/uploads/${cat.category_image}`} alt={cat.name_en}
+                                                    <img src={`${API_URL} / uploads / ${cat.category_image}`} alt={cat.name_en}
                                                         style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--green-100)' }} />
                                                 ) : <span style={{ opacity: 0.4, fontSize: '0.75rem' }}>—</span>}
                                             </td>
