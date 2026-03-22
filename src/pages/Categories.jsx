@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AdminLayout, useAuth } from '../App';
+import AdminLayout from '../components/AdminLayout';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 
@@ -73,7 +74,7 @@ export default function CategoriesPage() {
     const handleDelete = async (id) => {
         if (!deleteId) { setDeleteId(id); return; }
         try {
-            const res = await fetch(`${API_URL} / api / admin / categories / ${id}`, { method: 'DELETE', headers: authH });
+            const res = await fetch(`${API_URL}/api/admin/categories/${id}`, { method: 'DELETE', headers: authH });
             const data = await res.json();
             if (data.success) { showAlert('success', 'Category deleted'); fetchCategories(); }
             else showAlert('error', data.message);
@@ -131,18 +132,17 @@ export default function CategoriesPage() {
                         <div className="table-wrap">
                             <table className="data-table">
                                 <thead>
-                                    <tr><th>Image</th><th>Icon</th><th>Hindi</th><th>English</th><th>Actions</th></tr>
+                                    <tr><th>Image</th><th>Hindi</th><th>English</th><th>Actions</th></tr>
                                 </thead>
                                 <tbody>
                                     {categories.map(cat => (
                                         <tr key={cat.id} style={{ verticalAlign: 'middle' }}>
                                             <td style={{ padding: '5px 8px' }}>
                                                 {cat.category_image ? (
-                                                    <img src={`${API_URL} / uploads / ${cat.category_image}`} alt={cat.name_en}
+                                                    <img src={`${API_URL}/uploads/${cat.category_image}`} alt={cat.name_en}
                                                         style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid var(--green-100)' }} />
                                                 ) : <span style={{ opacity: 0.4, fontSize: '0.75rem' }}>—</span>}
                                             </td>
-                                            <td style={{ fontSize: '1.2rem', padding: '5px 8px' }}>{cat.icon}</td>
                                             <td style={{ fontWeight: 600, fontSize: '0.88rem', padding: '5px 8px' }}>{cat.name_hi}</td>
                                             <td style={{ fontSize: '0.85rem', padding: '5px 8px' }}>{cat.name_en}</td>
                                             <td style={{ padding: '5px 8px' }}>

@@ -744,3 +744,216 @@ tr:hover td {
         font-size: 0.8rem;
     }
 }
+
+/* ============================================================
+   TOAST NOTIFICATIONS
+   ============================================================ */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+    pointer-events: none; /* Let clicks pass through empty space */
+}
+
+.toast {
+    pointer-events: auto; /* Catch clicks on toast */
+    background: var(--white);
+    border-left: 4px solid var(--green-light);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    animation: toastSlideIn 0.3s ease-out forwards;
+    transition: transform 0.2s;
+}
+
+.toast:hover {
+    transform: translateY(-2px);
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-content strong {
+    font-size: 0.9rem;
+    color: var(--gray-900);
+}
+
+.toast-content span {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    margin-top: 2px;
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+    }
+}
+
+/* ============================================================
+   NOTIFICATION BELL & MENU
+   ============================================================ */
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    position: relative;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.notification-btn:hover {
+    background: var(--gray-100);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--red);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 2px 6px;
+    line-height: 1;
+    transform: translate(25%, -15%);
+    border: 2px solid var(--white);
+}
+
+.notification-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 12px;
+    width: 320px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--gray-200);
+    z-index: 1000;
+    overflow: hidden;
+    animation: fadeInMenu 0.2s ease-out;
+}
+
+@keyframes fadeInMenu {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.notification-menu-header {
+    background: var(--gray-50);
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.notification-menu-body {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.no-notifications {
+    padding: 30px;
+    text-align: center;
+    color: var(--gray-600);
+    font-size: 0.85rem;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #fdfdfd;
+}
+
+.notification-item:hover {
+    background: var(--green-pale);
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.ni-icon {
+    font-size: 1.4rem;
+    background: var(--green-pale);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--green-dark);
+    flex-shrink: 0;
+}
+
+.ni-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.ni-text strong {
+    font-size: 0.85rem;
+    color: var(--gray-900);
+    margin-bottom: 2px;
+}
+
+.ni-text span {
+    font-size: 0.75rem;
+    color: var(--gray-600);
+}
+
+@media (max-width: 480px) {
+    .notification-menu {
+        position: fixed;
+        top: 60px;
+        right: 16px;
+        left: 16px;
+        width: auto;
+    }
+}

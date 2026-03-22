@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AdminLayout, useAuth } from '../App';
+import AdminLayout from '../components/AdminLayout';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 
